@@ -19,13 +19,25 @@ body {
   background: linear-gradient(135deg, #FF7E5F, #FD3A84);
 }
 
-/* History Tab Styling */
+/* Make History tab scrollable */
 #History {
   background: linear-gradient(135deg, #7F7FD5, #86A8E7, #91EAE4);
+  max-height: 300px; /* Set the max height of the container */
+  overflow-y: auto;  /* Enable vertical scrolling */
+  padding-right: 10px; /* Add padding to avoid clipping */
 }
 
+
 /* Tab navigation buttons */
+.tab {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 10px; /* Space between the buttons */
+  margin-bottom: 10px;
+}
+
 .tab button {
+  flex: 1; /* Make buttons take up equal width */
   background-color: #333;
   color: white;
   padding: 10px 20px;
