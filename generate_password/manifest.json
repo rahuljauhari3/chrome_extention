@@ -1,0 +1,11 @@
+{
+    "manifest_version": 3,
+    "name": "Password Generator",
+    "version": "1.0",
+    "description": "Generate strong passwords with one click!",
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "permissions": ["storage"]
+  }
+  
