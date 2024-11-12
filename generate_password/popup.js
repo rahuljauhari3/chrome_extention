@@ -81,7 +81,7 @@ function savePasswordToHistory(password) {
 function displayHistory() {
   chrome.storage.local.get({ history: [] }, function(result) {
     historyList.innerHTML = ''; // Clear current list
-    result.history.forEach((password, index) => {
+    result.history.forEach((password) => {
       const listItem = document.createElement('li');
       listItem.className = 'history-item';
       
