@@ -1,6 +1,35 @@
-#basePhrase {
-  width: 100%;
-  padding: 5px;
-  margin: 5px 0;
-  font-size: 14px;
+.tab {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab button {
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: 0.3s;
+}
+
+.tab button:hover, .tab button.active {
+  background-color: #ccc;
+}
+
+.tabcontent {
+  display: none;
+  padding: 10px;
+}
+
+#Generate, #History {
+  display: none;
+}
+
+#historyList li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+#historyList button {
+  margin-left: 10px;
 }
