@@ -1,0 +1,11 @@
+{
+    "manifest_version": 3,
+    "name": "Tetris Game",
+    "version": "1.0",
+    "description": "Play Tetris in a Chrome extension popup!",
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "permissions": []
+  }
+  
