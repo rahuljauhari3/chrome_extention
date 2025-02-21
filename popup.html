@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Groq Chat</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        width: 300px;
+        margin: 10px;
+      }
+      #chatBox {
+        border: 1px solid #ccc;
+        height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      #messageInput {
+        width: 80%;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Groq Chat</h2>
+    <div>
+      <label for="apiKey">Groq API Key:</label><br/>
+      <input type="text" id="apiKey" placeholder="Enter API key" style="width: 100%;" />
+      <button id="saveKey">Save Key</button>
+    </div>
+    <hr/>
+    <div id="chatBox"></div>
+    <div>
+      <input type="text" id="messageInput" placeholder="Type your message" />
+      <button id="sendBtn">Send</button>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
