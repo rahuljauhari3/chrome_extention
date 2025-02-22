@@ -71,6 +71,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Handle selected text from content script
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.type === 'selectedText') {
+      const selectedText = message.text;
+      appendMessage('You', selectedText);
+      conversation.push({ role: 'user', content: selectedText });
+
+      // Save conversation to Chrome Storage Sync
+      chrome.storage.sync.set({ groqConversation: conversation }, () => {
+        // Retrieve the saved API key and send the conversation to background
+        chrome.storage.sync.get(['groqApiKey'], (result) => {
+          const apiKey = result.groqApiKey;
+          if (!apiKey) {
+            alert('Please enter your Groq API key.');
+            return;
+          }
+
+          chrome.runtime.sendMessage(
+            {
+              type: 'chatRequest',
+              apiKey: apiKey,
+              conversation: conversation
+            },
+            (response) => {
+              if (response && response.answer) {
+                appendMessage('Groq', response.answer);
+                conversation.push({ role: 'assistant', content: response.answer });
+
+                // Save the updated conversation to Chrome Storage Sync
+                chrome.storage.sync.set({ groqConversation: conversation }, () => {});
+              } else {
+                appendMessage('Groq', 'Error getting response.');
+              }
+            }
+          );
+        });
+      });
+    }
+  });
+
   function appendMessage(sender, text) {
     const div = document.createElement('div');
     div.innerHTML = `<strong>${sender}:</strong> ${text}`;

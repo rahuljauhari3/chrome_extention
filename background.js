@@ -1,7 +1,7 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'chatRequest') {
     const { apiKey, conversation } = message;
-    
+
     fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -27,8 +27,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.error('Error calling Groq API:', err);
         sendResponse({ answer: 'Error calling Groq API.' });
       });
-    
-    // Return true to indicate sendResponse will be called asynchronously
+
     return true;
   }
 });
