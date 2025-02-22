@@ -18,18 +18,33 @@
       #messageInput {
         width: 80%;
       }
+      .api-section {
+        display: flex;
+        flex-direction: column;
+      }
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+      }
+      .danger {
+        background-color: red;
+        color: white;
+      }
     </style>
   </head>
   <body>
     <h2>Groq Chat</h2>
-    <div>
+    <div class="api-section">
       <label for="apiKey">Groq API Key:</label><br/>
       <input type="text" id="apiKey" placeholder="Enter API key" style="width: 100%;" />
-      <button id="saveKey">Save Key</button>
+      <div class="button-group">
+        <button id="saveKey">Save Key</button>
+        <button id="clearKey" class="danger">Clear Key</button>
+      </div>
     </div>
     <hr/>
-    <div id="chatBox"></div>
-    <div>
+    <div id="chatBox" class="chat-container"></div>
+    <div class="input-group">
       <input type="text" id="messageInput" placeholder="Type your message" />
       <button id="sendBtn">Send</button>
     </div>
