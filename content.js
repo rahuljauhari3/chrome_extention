@@ -2,50 +2,44 @@ document.addEventListener('mouseup', () => {
   const selectedText = window.getSelection().toString();
   if (selectedText) {
     chrome.runtime.sendMessage({ type: 'selectedText', text: selectedText });
-    showOverlay(selectedText);
+    showHover(selectedText);
   }
 });
 
-function showOverlay(text) {
-  const overlay = document.createElement('div');
-  overlay.style.position = 'fixed';
-  overlay.style.top = '0';
-  overlay.style.left = '0';
-  overlay.style.width = '100%';
-  overlay.style.height = '100%';
-  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-  overlay.style.display = 'flex';
-  overlay.style.justifyContent = 'center';
-  overlay.style.alignItems = 'center';
-  overlay.style.zIndex = '1000';
+// Remove or comment out old showOverlay function
+// function showOverlay(text) { ... }
 
-  const chatBox = document.createElement('div');
-  chatBox.style.backgroundColor = 'white';
-  chatBox.style.padding = '20px';
-  chatBox.style.borderRadius = '5px';
-  chatBox.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
-  chatBox.style.width = '300px';
-  chatBox.style.maxHeight = '300px';
-  chatBox.style.overflowY = 'auto';
+// New hover tooltip function
+function showHover(text) {
+  // Remove any existing hover
+  const existingHover = document.getElementById('text-hover-tooltip');
+  if (existingHover) {
+    existingHover.remove();
+  }
 
-  const message = document.createElement('p');
-  message.textContent = `Selected Text: ${text}`;
-  chatBox.appendChild(message);
+  const selection = window.getSelection();
+  if (selection.rangeCount === 0) return;
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
 
-  const closeButton = document.createElement('button');
-  closeButton.textContent = 'Close';
-  closeButton.style.marginTop = '10px';
-  closeButton.style.width = '100%';
-  closeButton.style.padding = '10px';
-  closeButton.style.backgroundColor = 'red';
-  closeButton.style.color = 'white';
-  closeButton.style.border = 'none';
-  closeButton.style.cursor = 'pointer';
-  closeButton.addEventListener('click', () => {
-    overlay.remove();
-  });
-  chatBox.appendChild(closeButton);
+  const hover = document.createElement('div');
+  hover.id = 'text-hover-tooltip';
+  hover.textContent = text;
+  hover.style.position = 'absolute';
+  hover.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+  hover.style.color = '#fff';
+  hover.style.padding = '8px 12px';
+  hover.style.borderRadius = '4px';
+  hover.style.top = `${window.scrollY + rect.bottom + 5}px`;
+  hover.style.left = `${window.scrollX + rect.left}px`;
+  hover.style.zIndex = '10000';
+  hover.style.maxWidth = '300px';
+  hover.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
 
-  overlay.appendChild(chatBox);
-  document.body.appendChild(overlay);
+  document.body.appendChild(hover);
+
+  // Auto-remove the hover after 3 seconds
+  setTimeout(() => {
+    hover.remove();
+  }, 3000);
 }
