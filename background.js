@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'chatRequest') {
-    const { apiKey, conversation } = message;
+    const { apiKey, conversation, model } = message;
 
     fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -9,10 +9,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "llama3-70b-8192", // change to your preferred Groq model
+        model: model || "llama3-70b-8192", // use selected model or default
         messages: conversation,
-        temperature: 0.7,
-        max_completion_tokens: 150
+        temperature: 0.5,
+        // Removed max_completion_tokens to allow full responses
       })
     })
       .then((res) => res.json())
