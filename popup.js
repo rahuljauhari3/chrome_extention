@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatBox = document.getElementById('chatBox');
   const messageInput = document.getElementById('messageInput');
   const sendBtn = document.getElementById('sendBtn');
+  const clearChatBtn = document.getElementById('clearChatBtn');
   let conversation = [];
 
   // Load saved API key from storage
@@ -68,6 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         );
       });
+    });
+  });
+
+  clearChatBtn.addEventListener('click', () => {
+    // Clear the chat box UI
+    chatBox.innerHTML = '';
+    // Clear the conversation array
+    conversation = [];
+    // Clear the stored conversation
+    chrome.storage.sync.remove('groqConversation', () => {
+      console.log('Chat history cleared');
     });
   });
 

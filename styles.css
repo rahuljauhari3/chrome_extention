@@ -79,9 +79,22 @@ body {
 
 .input-group {
   display: flex;
-  gap: 10px;
+  gap: 5px;
 }
 
 .input-group input {
   flex: 1;
+}
+
+.input-group button {
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.input-group .danger {
+  background-color: #dc3545;
+}
+
+.input-group .danger:hover {
+  background-color: #c82333;
 }
