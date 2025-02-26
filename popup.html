@@ -2,61 +2,34 @@
 <html>
   <head>
     <title>Groq Chat</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        width: 300px;
-        margin: 10px;
-      }
-      #chatBox {
-        border: 1px solid #ccc;
-        height: 300px;
-        overflow-y: auto;
-        padding: 10px;
-        margin-bottom: 10px;
-      }
-      #messageInput {
-        width: 80%;
-      }
-      .api-section {
-        display: flex;
-        flex-direction: column;
-      }
-      .button-group {
-        display: flex;
-        justify-content: space-between;
-      }
-      .danger {
-        background-color: red;
-        color: white;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <h2>Groq Chat</h2>
     <div class="api-section">
-      <label for="apiKey">Groq API Key:</label><br/>
-      <input type="text" id="apiKey" placeholder="Enter API key" style="width: 100%;" />
+      <label for="apiKey">Groq API Key:</label>
+      <input type="password" id="apiKey" placeholder="Enter API key" />
       <div class="button-group">
         <button id="saveKey">Save Key</button>
         <button id="clearKey" class="danger">Clear Key</button>
       </div>
     </div>
     <div class="model-section">
-      <label for="modelSelect">Model:</label><br/>
-      <select id="modelSelect" style="width: 100%; margin-bottom: 10px;">
+      <label for="modelSelect">Model:</label>
+      <select id="modelSelect">
         <option value="llama3-70b-8192">LLaMA 3 70B</option>
         <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B Versatile</option>
         <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
         <option value="gemma2-9b-it">Gemma 9B</option>
       </select>
     </div>
-    <hr/>
     <div id="chatBox" class="chat-container"></div>
     <div class="input-group">
       <input type="text" id="messageInput" placeholder="Type your message" />
-      <button id="sendBtn">Send</button>
-      <button id="clearChatBtn" class="danger">Clear</button>
+      <div class="button-group">
+        <button id="sendBtn">Send</button>
+        <button id="clearChatBtn" class="danger">Clear</button>
+      </div>
     </div>
     <script src="popup.js"></script>
   </body>
