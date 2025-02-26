@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.sync.get(['groqApiKey'], (result) => {
     if (result.groqApiKey) {
       apiKeyInput.value = result.groqApiKey;
+      console.log('Loaded API key:', result.groqApiKey);
     }
   });
 
@@ -35,8 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   saveKeyBtn.addEventListener('click', () => {
     const key = apiKeyInput.value.trim();
+    console.log('Saving API key:', key);
     chrome.storage.sync.set({ groqApiKey: key }, () => {
+      console.log('API key saved.');
       alert('API key saved!');
+    });
+  });
+
+  // New clear key functionality
+  document.getElementById('clearKey').addEventListener('click', () => {
+    console.log('Clearing API key.');
+    chrome.storage.sync.remove('groqApiKey', () => {
+      apiKeyInput.value = '';
+      console.log('API key cleared from storage.');
+      alert('API key cleared!');
     });
   });
 
@@ -48,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   sendBtn.addEventListener('click', () => {
     const message = messageInput.value.trim();
     if (!message) return;
-
+    console.log('User message sending:', message);
     appendMessage('You', message);
     conversation.push({ role: 'user', content: message });
     messageInput.value = '';
@@ -62,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
           alert('Please enter your Groq API key.');
           return;
         }
-
+        console.log('Sending chat request with conversation:', conversation);
         chrome.runtime.sendMessage(
           {
             type: 'chatRequest',
@@ -72,12 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           (response) => {
             if (response && response.answer) {
+              console.log('Received response:', response.answer);
               appendMessage('Groq', response.answer);
               conversation.push({ role: 'assistant', content: response.answer });
 
               // Save the updated conversation to Chrome Storage Sync
               chrome.storage.sync.set({ groqConversation: conversation }, () => {});
             } else {
+              console.log('Error: No answer in response.');
               appendMessage('Groq', 'Error getting response.');
             }
           }
@@ -90,15 +105,17 @@ document.addEventListener('DOMContentLoaded', () => {
   messageInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
+      console.log('Enter key pressed.');
       sendBtn.click();
     }
   });
 
   clearChatBtn.addEventListener('click', () => {
+    console.log('Clearing chat history.');
     chatBox.innerHTML = '';
     conversation = [];
     chrome.storage.sync.remove('groqConversation', () => {
-      console.log('Chat history cleared');
+      console.log('Chat history cleared from storage.');
     });
   });
 
@@ -108,37 +125,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const selectedText = message.text;
       appendMessage('You', selectedText);
       conversation.push({ role: 'user', content: selectedText });
-
-      // Save conversation to Chrome Storage Sync
-      chrome.storage.sync.set({ groqConversation: conversation }, () => {
-        // Retrieve the saved API key and send the conversation to background
-        chrome.storage.sync.get(['groqApiKey'], (result) => {
-          const apiKey = result.groqApiKey;
-          if (!apiKey) {
-            alert('Please enter your Groq API key.');
-            return;
-          }
-
-          chrome.runtime.sendMessage(
-            {
-              type: 'chatRequest',
-              apiKey: apiKey,
-              model: modelSelect.value,
-              conversation: conversation
-            },
-            (response) => {
-              if (response && response.answer) {
-                appendMessage('Groq', response.answer);
-                conversation.push({ role: 'assistant', content: response.answer });
-
-                // Save the updated conversation to Chrome Storage Sync
-                chrome.storage.sync.set({ groqConversation: conversation }, () => {});
-              } else {
-                appendMessage('Groq', 'Error getting response.');
-              }
+  
+      chrome.storage.sync.get(['groqApiKey'], (result) => {
+        const apiKey = result.groqApiKey;
+        if (!apiKey) {
+          alert('Please enter your Groq API key.');
+          return;
+        }
+        chrome.runtime.sendMessage(
+          {
+            type: 'chatRequest',
+            apiKey: apiKey,
+            model: modelSelect.value,
+            conversation: conversation
+          },
+          (response) => {
+            if (response && response.answer) {
+              appendMessage('Groq', response.answer);
+              conversation.push({ role: 'assistant', content: response.answer });
             }
-          );
-        });
+          }
+        );
       });
     }
   });

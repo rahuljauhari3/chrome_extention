@@ -1,6 +1,7 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'chatRequest') {
     const { apiKey, conversation, model } = message;
+    console.log('Received chatRequest:', { apiKey, conversation, model });
 
     fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -21,6 +22,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (data && data.choices && data.choices.length > 0) {
           answer = data.choices[0].message.content;
         }
+        console.log('API response:', data, 'Sending answer:', answer);
         sendResponse({ answer });
       })
       .catch((err) => {
@@ -29,5 +31,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
 
     return true;
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'openChatWindow') {
+    console.log('Received message to open chat window with text:', message.text);
+    chrome.windows.create({
+      url: 'popup.html?text=' + encodeURIComponent(message.text),
+      type: 'popup',
+      width: 400,
+      height: 600
+    });
+
+    sendResponse({ status: 'success' });
+    return true; // Keeps the message channel open
   }
 });
